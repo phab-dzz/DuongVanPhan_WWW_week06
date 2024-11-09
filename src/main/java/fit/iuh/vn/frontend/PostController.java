@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/post")
-public class controller {
+public class PostController {
     @Autowired
     private PostRepository postRepository;
     @GetMapping("/list")
