@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>{
     boolean findByMobileAndPasswordHash(String mobile, String passwordHash);
+    User findUserByEmail(String email);
 }

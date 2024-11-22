@@ -1,0 +1,33 @@
+<nav class="navbar navbar-expand-sm navbar-light bg-light">
+    <div class="collapse navbar-collapse" id="collapsibleNavId">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active mr-3">
+                <a class="nav-link" href="/">HomePage</a>
+            </li>
+            <li class="nav-item active mr-3">
+                <a class="nav-link" href="/post/list">All Post</a>
+            </li>
+       
+
+
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+
+            <a
+                    th:if="${session.account != null}"
+                    class="btbtn-outline-danger my-2 my-sm-0 mr-5"
+                    href="/users/sign-out"
+            >Sign out</a>
+            <a
+                    th:if="${session.account == null}"
+                    class="btn  my-2 my-sm-0 mr-5"
+                    th:href="@{/user/open_signin}"
+            >Sign In</a>
+            <a
+                    th:if="${session.account == null}"
+                    class="btn  my-2 my-sm-0"
+
+            >Sign Up</a>
+        </form>
+    </div>
+</nav>

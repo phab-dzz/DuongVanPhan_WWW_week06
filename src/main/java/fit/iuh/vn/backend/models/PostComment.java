@@ -46,6 +46,9 @@ public class PostComment {
 
     @OneToMany(mappedBy = "parent")
     private Set<PostComment> postComments = new LinkedHashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
+    private User user;
 
     public PostComment(Post post, PostComment parent, String title, Boolean published, LocalDate createdAt, LocalDate publishedAt, String content) {
         this.post = post;
