@@ -2,19 +2,19 @@ package fit.iuh.vn.frontend;
 
 import fit.iuh.vn.backend.models.Post;
 import fit.iuh.vn.backend.models.PostComment;
+import fit.iuh.vn.backend.models.User;
 import fit.iuh.vn.backend.repositories.PostRepository;
 import fit.iuh.vn.backend.services.PostCommentService;
 import fit.iuh.vn.backend.services.PostService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -73,4 +73,46 @@ public class PostController {
         modelAndView.setViewName("post/PostDetail");
         return modelAndView;
     }
+
+    @GetMapping("/open_add")
+    public ModelAndView showAddPostPage(){
+        ModelAndView modelAndView = new ModelAndView("post/AddPost");
+        Post post = new Post();
+        modelAndView.addObject("post", post);
+
+        return modelAndView;
     }
+    @PostMapping("/add")
+    public String handleAddNewPost(@ModelAttribute("post") Post post
+            , @RequestParam("parent") String parent
+            , HttpServletRequest request, Model model){
+
+        long parentId = -1;
+
+        if (!parent.trim().isEmpty()){
+            try {
+                parentId = Long.parseLong(parent);
+            } catch (Exception e){
+                model.addAttribute("mess", "Phải là số nguyên dương!");
+                return "post/AddPost";
+            }
+
+            Post objParentPost = postRepository.findById(parentId).orElse(null);
+
+            if (objParentPost == null){
+                model.addAttribute("mess", "Không tồn tại Parent ID này!");
+                return "post/AddPost";
+            }
+            post.setParent(objParentPost);
+        }
+
+        post.setPublished(true);
+        post.setPublishedAt(LocalDate.now());
+        post.setCreatedAt(LocalDate.now());
+        post.setAuthor((User) request.getSession().getAttribute("account"));
+
+        postRepository.save(post);
+        return "redirect:/post/list";
+    }
+
+}

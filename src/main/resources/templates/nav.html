@@ -7,7 +7,12 @@
             <li class="nav-item active mr-3">
                 <a class="nav-link" href="/post/list">All Post</a>
             </li>
-       
+            <li class="nav-item active mr-3"
+                th:if="${session.account != null}"
+            >
+                <a class="nav-link" href="/post/open_add">Add Post</a>
+            </li>
+
 
 
         </ul>
@@ -16,7 +21,7 @@
             <a
                     th:if="${session.account != null}"
                     class="btbtn-outline-danger my-2 my-sm-0 mr-5"
-                    href="/users/sign-out"
+                    href="/user/signout"
             >Sign out</a>
             <a
                     th:if="${session.account == null}"

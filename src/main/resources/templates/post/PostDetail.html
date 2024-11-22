@@ -14,124 +14,89 @@
 <div th:replace="nav"></div>
 
 <div class="container">
+
   <h1 class="py-3" th:text="${post.title}"></h1>
-  <div class="d-flex align-items-center" style="border-top: 1px solid #555; border-bottom: 1px solid #555">
-    <div class="d-flex align-items-center mr-5 py-3">
-      <i class="fa-regular fa-circle-user mr-1"></i>
-      <p style="margin: 0; padding: 0"
-         th:text="${post.getAuthor().getFirstName() + ' ' + post.getAuthor().getLastName()}"
-      ></p>
+
+
+  <div class="d-flex justify-content-between py-3 border-top border-bottom">
+    <div class="d-flex align-items-center">
+      <i class="fa-regular fa-circle-user mr-2"></i>
+      <span th:text="${post.getAuthor().getFirstName() + ' ' + post.getAuthor().getLastName()}"></span>
     </div>
-    <div class="d-flex align-items-center mr-5 py-3">
-      <i class="fa-regular fa-calendar-days mr-1"></i>
-      <p style="margin: 0; padding: 0"
-         th:text="${post.getPublishedAt().toString()}"
-      >
-
-      </p>
+    <div class="d-flex align-items-center">
+      <i class="fa-regular fa-calendar-days mr-2"></i>
+      <span th:text="${post.getPublishedAt().toString()}"></span>
     </div>
-
   </div>
-  <p style="font-weight: 500; font-size: 20px"
-     th:text="${post.getSummary()}"
-  >
 
-  </p>
-  <p
-          th:text="${post.getContent()}"
-  >
 
-  </p>
-  <div class="d-flex align-items-center">
-    <i class="fa-solid fa-tags mr-1"></i>
-    <span
-            th:text="${post.metaTitle}"
-    >
+  <p class="font-weight-medium text-secondary mt-4" style="font-size: 18px;" th:text="${post.getSummary()}"></p>
 
-          </span>
+  <div class="content mt-3" th:text="${post.getContent()}"></div>
+
+  <div class="d-flex align-items-center mt-3">
+    <i class="fa-solid fa-tags mr-2"></i>
+    <span th:text="${post.metaTitle}"></span>
   </div>
+
   <div class="mt-5" th:if="${post.posts != null && post.posts.size() > 0}">
-    <h4>List Child Posts</h4>
-    <ul>
-      <th:block
-              th:each="postChild : ${post.posts}"
-      >
-        <li>
-          <a th:href="@{'/posts/' + ${postChild.id}}"
-             th:text="${postChild.title}"></a>
+    <h4>List of Related Posts</h4>
+    <ul class="list-unstyled">
+      <th:block th:each="postChild : ${post.posts}">
+        <li class="mb-2">
+          <a class="text-primary" th:href="@{'/posts/' + ${postChild.id}}" th:text="${postChild.title}"></a>
         </li>
       </th:block>
     </ul>
   </div>
+
   <div class="mt-5" th:if="${postCommentPage != null}">
     <h4>Comments</h4>
     <th:block th:each="postComment : ${postCommentPage.content}">
-      <div style="width: 70%">
-        <div class="d-flex p-3"
-             style="border: 1px solid #000; border-radius: 8px; margin-bottom: 20px"
-        >
-          <div>
-            <img
-                    style="border-radius: 50px; width: 65px; height: 65px"
-                    src="https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="/>
-          </div>
-          <div style="flex-grow: 1">
-            <p style="color: forestgreen; font-weight: 700; margin-bottom: 5px;"
-               th:inline="text" th:text="${postComment.user.firstName + ' ' + postComment.user.lastName}"
-            >
-            </p>
-            <p style="margin-bottom: 5px" th:text="${'Comment ID: ' + postComment.id}"></p>
-            <p style="margin-bottom: 5px"
-               th:if="${postComment.parent != null}"
-               th:text="${'Parent Comment ID: ' + postComment.parent.id}"></p>
-            <p style="margin-bottom: 5px; color: #000; font-weight: 500" th:text="${'Title: ' + postComment.title}"
-            ></p>
-            <p th:text="${'Content: ' + postComment.content}">
-
-            </p>
-            <p style="margin-bottom: 0" th:text="${'Date: ' + postComment.publishedAt}"></p>
-          </div>
-          <div>
-            <a
-                    th:if="${session.account != null && session.account.id == postComment.user.id}"
-                    th:href="@{'/post-comments/edit/' + ${postComment.id}}"><i class="fa-solid fa-pen-to-square" style="font-size: 30px; margin-right: 10px"></i></a>
-            <a
-                    th:if="${session.account != null && session.account.id == postComment.user.id}"
-                    th:href="@{'/post-comments/delete/' + ${postComment.id}}"><i class="fa-solid fa-trash" style="font-size: 30px;"></i></a>
-          </div>
+      <div class="d-flex p-3 border rounded mb-4">
+        <img class="rounded-circle mr-3" style="width: 65px; height: 65px;"
+             src="https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=" />
+        <div class="flex-grow-1">
+          <p class="font-weight-bold text-success mb-1" th:text="${postComment.user.firstName + ' ' + postComment.user.lastName}"></p>
+          <p class="mb-1" th:text="${'Comment ID: ' + postComment.id}"></p>
+          <p class="mb-1" th:if="${postComment.parent != null}" th:text="${'Parent Comment ID: ' + postComment.parent.id}"></p>
+          <p class="font-weight-bold mb-1" th:text="${'Title: ' + postComment.title}"></p>
+          <p class="text-muted mb-1" th:text="${'Content: ' + postComment.content}"></p>
+          <p class="text-secondary mb-0" th:text="${'Date: ' + postComment.publishedAt}"></p>
+        </div>
+        <div>
+          <a th:if="${session.account != null && session.account.id == postComment.user.id}"
+             th:href="@{'/post-comments/edit/' + ${postComment.id}}">
+            <i class="fa-solid fa-pen-to-square text-primary" style="font-size: 24px; margin-right: 10px;"></i>
+          </a>
+          <a th:if="${session.account != null && session.account.id == postComment.user.id}"
+             th:href="@{'/post-comments/delete/' + ${postComment.id}}">
+            <i class="fa-solid fa-trash text-danger" style="font-size: 24px;"></i>
+          </a>
         </div>
       </div>
     </th:block>
 
-    <div th:if="${pageCmtNumbers != null}"
-         th:each="pageCmt : ${pageCmtNumbers}"
-         style="text-align: center"
-    >
-      <a th:href="@{'/posts/' + ${post.id} + '?(cmtPage=' + ${pageCmt} + ', cmtSize=' + ${postCommentPage.size} +')'}"
-         th:text="${pageCmt}"
-         style="font-size: 18px; font-weight: 700"
-      ></a>
+    <div class="text-center mt-4" th:if="${pageCmtNumbers != null}">
+      <th:block th:each="pageCmt : ${pageCmtNumbers}">
+        <a th:href="@{'/posts/' + ${post.id} + '?(cmtPage=' + ${pageCmt} + ', cmtSize=' + ${postCommentPage.size} +')'}"
+           class="btn btn-outline-primary mx-1"
+           th:text="${pageCmt}"></a>
+      </th:block>
     </div>
   </div>
-  <div th:if="${session != null && session.account != null}" class="mt-3">
-    <h5>Post Your comment: </h5>
-    <form action="#" method="post" th:action="@{/post-comments/add}">
-      <div class="form-group">
-        <input type="hidden"
-               class="form-control" th:name="postID"
-               th:value="${post.id}"
-               id="inputPostID" required
-        >
-      </div>
+
+  <div th:if="${session != null && session.account != null}" class="mt-4">
+    <h5>Post Your Comment</h5>
+    <form th:action="@{/post-comments/add}" method="post">
+      <input type="hidden" th:name="postID" th:value="${post.id}" />
       <div class="form-group">
         <label for="inputReplyCommentID">Reply Comment ID (Optional)</label>
-        <input type="number"
-               class="form-control" th:name="parentCmtID" id="inputReplyCommentID">
+        <input type="number" class="form-control" th:name="parentCmtID" id="inputReplyCommentID" />
       </div>
       <div class="form-group">
         <label for="inputTitle">Title</label>
-        <input type="text"
-               class="form-control" th:name="title" id="inputTitle">
+        <input type="text" class="form-control" th:name="title" id="inputTitle" />
       </div>
       <div class="form-group">
         <label for="inputContent">Content</label>
@@ -139,9 +104,9 @@
       </div>
       <button type="submit" class="btn btn-primary">Comment</button>
     </form>
-    <h5 th:text="${p}"></h5>
   </div>
 </div>
+
 
 
 
